@@ -39,9 +39,9 @@ import sys
 # ============================================================
 #  CONFIG
 # ============================================================
-GROQ_API_KEY    = "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"
+GROQ_API_KEY    = "API_Key"
 GMAIL_ADDRESS   = "ronitgulia3@gmail.com"
-GMAIL_APP_PASS  = "tnwc umdk dtwa vily"
+GMAIL_APP_PASS  = "xxxx xxxx xxxx xxxx"
 WAKE_WORD       = "hey jarvis"
 USER_NAME       = "Boss"
 
