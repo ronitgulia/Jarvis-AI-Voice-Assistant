@@ -56,7 +56,7 @@ Started as a fun experiment to see if I could control my laptop hands-free. One 
 
 - Python
 - Groq API — llama-3.3-70b for AI understanding
-- SpeechRecognition + PyAudio — voice input
+- faster-whisper + SpeechRecognition + PyAudio — offline voice recognition and input
 - pyttsx3 — voice output  
 - PyAutoGUI — keyboard and mouse automation
 - PyQt5 — GUI dashboard
@@ -88,7 +88,7 @@ jarvis/
 ## Setup
 
 ```bash
-pip install groq SpeechRecognition pyttsx3 pyautogui psutil requests wikipedia screen-brightness-control pycaw pyaudio PyQt5 pywhatkit Pillow
+pip install groq SpeechRecognition pyttsx3 pyautogui psutil requests wikipedia screen-brightness-control pycaw pyaudio PyQt5 pywhatkit Pillow faster-whisper numpy
 ```
 
 Create a `.env` file in the project folder:
@@ -109,7 +109,7 @@ python main.py
 
 ```
 Say "Hey JARVIS" → Wake word detected → Listen for command
-→ SpeechRecognition converts speech to text
+→ faster-whisper converts speech to text locally
 → Groq AI understands intent and picks the right action
 → Python executes the action on the system
 → JARVIS speaks the response back
