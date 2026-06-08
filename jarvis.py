@@ -1,4 +1,6 @@
 import speech_recognition as sr
+import numpy as np
+from faster_whisper import WhisperModel
 import pyttsx3
 import threading
 import queue
@@ -18,6 +20,18 @@ from memory import (
 # circular import that existed between jarvis.py and actions.py.
 
 client = Groq(api_key=GROQ_API_KEY)
+
+# Initialize local Whisper model
+whisper_model = WhisperModel("base", device="cpu", compute_type="int8")
+
+def transcribe_audio(audio_data):
+    """Convert AudioData to numpy array and transcribe with faster-whisper."""
+    # Convert from 16kHz, 16-bit mono to float32 numpy array
+    raw_data = audio_data.get_raw_data(convert_rate=16000, convert_width=2)
+    audio_np = np.frombuffer(raw_data, dtype=np.int16).astype(np.float32) / 32768.0
+    segments, info = whisper_model.transcribe(audio_np, beam_size=5)
+    text = "".join(segment.text for segment in segments)
+    return text.strip()
 
 # ── TTS — Queue-based so speaks never overlap ─────────────────
 engine = pyttsx3.init()
@@ -100,7 +114,7 @@ def listen(timeout=8, phrase_limit=12):
         r.adjust_for_ambient_noise(source, duration=1.0)
         try:
             audio   = r.listen(source, timeout=timeout, phrase_time_limit=phrase_limit)
-            command = r.recognize_google(audio).lower()
+            command = transcribe_audio(audio).lower()
             print(f"You said: {command}")
             _gui_convo("user", command)
             _gui_cmd(command)
@@ -111,9 +125,6 @@ def listen(timeout=8, phrase_limit=12):
             return ""
         except sr.WaitTimeoutError:
             _gui_status("STANDBY — Waiting for wake word", "#00d4ff")
-            return ""
-        except sr.RequestError:
-            speak("Internet connection needed!")
             return ""
 
 
@@ -130,7 +141,7 @@ def wait_for_wake_word():
         while True:
             try:
                 audio = r.listen(source, timeout=3, phrase_time_limit=4)
-                text  = r.recognize_google(audio).lower()
+                text  = transcribe_audio(audio).lower()
                 if WAKE_WORD in text:
                     print(" Wake word detected!")
                     _gui_status("WAKE WORD DETECTED!", "#00ff88")
