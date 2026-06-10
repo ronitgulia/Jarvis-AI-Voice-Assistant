@@ -4,6 +4,9 @@ import psutil
 import pyautogui
 import screen_brightness_control as sbc
 
+# Initialize CPU percent baseline for non-blocking calls
+psutil.cpu_percent(interval=None)
+
 def set_volume_level(level):
     try:
         from pycaw.pycaw import AudioUtilities, IAudioEndpointVolume
@@ -61,7 +64,7 @@ def handle_brightness_set(value, speak, listen, memory):
         speak("Could not set brightness!")
 
 def handle_system_info(value, speak, listen, memory):
-    cpu  = psutil.cpu_percent(interval=1)
+    cpu  = psutil.cpu_percent(interval=None)
     ram  = psutil.virtual_memory()
     disk = psutil.disk_usage('/')
     bat  = psutil.sensors_battery()
@@ -77,7 +80,7 @@ def handle_battery_status(value, speak, listen, memory):
         speak("Could not get battery info!")
 
 def handle_cpu_usage(value, speak, listen, memory):
-    speak(f"CPU usage is {psutil.cpu_percent(interval=1)}%.")
+    speak(f"CPU usage is {psutil.cpu_percent(interval=None)}%.")
 
 def handle_ram_usage(value, speak, listen, memory):
     ram = psutil.virtual_memory()
