@@ -32,8 +32,6 @@ def handle_refresh(value, speak, listen, memory):
     pyautogui.press('f5')
 
 def handle_close_window(value, speak, listen, memory):
-    pyautogui.hotkey('alt', 'tab')
-    time.sleep(0.5)
     pyautogui.hotkey('alt', 'f4')
 
 def handle_minimize(value, speak, listen, memory):
