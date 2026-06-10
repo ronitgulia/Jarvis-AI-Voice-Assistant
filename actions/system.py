@@ -1,4 +1,5 @@
 import os
+import re
 import psutil
 import pyautogui
 import screen_brightness_control as sbc
@@ -27,8 +28,13 @@ def handle_volume_down(value, speak, listen, memory):
     for _ in range(5): pyautogui.press("volumedown")
 
 def handle_volume_set(value, speak, listen, memory):
-    set_volume_level(int(value))
-    speak(f"Volume set to {value} percent!")
+    match = re.search(r'\d+', str(value))
+    if match:
+        level = int(match.group())
+        set_volume_level(level)
+        speak(f"Volume set to {level} percent!")
+    else:
+        speak("I didn't catch the volume level.")
 
 def handle_mute(value, speak, listen, memory):
     pyautogui.press("volumemute")
