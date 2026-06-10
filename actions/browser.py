@@ -3,6 +3,10 @@ import pyautogui
 import time
 
 def handle_open_url(value, speak, listen, memory):
+    if not value or not value.strip():
+        speak("I didn't catch the URL.")
+        return
+    value = value.strip()
     if not value.startswith("http"):
         value = "https://" + value
     webbrowser.open(value)
