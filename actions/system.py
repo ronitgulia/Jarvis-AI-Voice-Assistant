@@ -1,4 +1,5 @@
 import os
+import subprocess
 import re
 import psutil
 import pyautogui
@@ -24,10 +25,10 @@ def set_volume_level(level):
         for _ in range(int(level / 2)):
             pyautogui.press("volumeup")
 
-def handle_volume_up(value, speak, listen, memory):
+def handle_volume_up(*args, **kwargs):
     for _ in range(5): pyautogui.press("volumeup")
 
-def handle_volume_down(value, speak, listen, memory):
+def handle_volume_down(*args, **kwargs):
     for _ in range(5): pyautogui.press("volumedown")
 
 def handle_volume_set(value, speak, listen, memory):
@@ -39,7 +40,7 @@ def handle_volume_set(value, speak, listen, memory):
     else:
         speak("I didn't catch the volume level.")
 
-def handle_mute(value, speak, listen, memory):
+def handle_mute(*args, **kwargs):
     pyautogui.press("volumemute")
 
 def handle_brightness_up(value, speak, listen, memory):
@@ -90,21 +91,21 @@ def handle_disk_usage(value, speak, listen, memory):
     disk = psutil.disk_usage('/')
     speak(f"Disk {disk.percent}%. {disk.used//(1024**3)}GB of {disk.total//(1024**3)}GB used.")
 
-def handle_lock(value, speak, listen, memory):
-    os.system("rundll32.exe user32.dll,LockWorkStation")
+def handle_lock(*args, **kwargs):
+    subprocess.run(["rundll32.exe", "user32.dll,LockWorkStation"])
 
 def handle_shutdown(value, speak, listen, memory):
     speak("Shutting down in 5 seconds!")
-    os.system("shutdown /s /t 5")
+    subprocess.run(["shutdown", "/s", "/t", "5"])
 
 def handle_restart(value, speak, listen, memory):
     speak("Restarting in 5 seconds!")
-    os.system("shutdown /r /t 5")
+    subprocess.run(["shutdown", "/r", "/t", "5"])
 
 def handle_sleep(value, speak, listen, memory):
     speak("Going to sleep!")
-    os.system("rundll32.exe powrprof.dll,SetSuspendState 0,1,0")
+    subprocess.run(["rundll32.exe", "powrprof.dll,SetSuspendState", "0,1,0"])
 
 def handle_hibernate(value, speak, listen, memory):
     speak("Hibernating!")
-    os.system("shutdown /h")
+    subprocess.run(["shutdown", "/h"])
